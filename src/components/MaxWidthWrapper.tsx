@@ -9,7 +9,10 @@ const MaxWidthWrapper = ({
   children: ReactNode;
 }) => {
   return (
-    <div className={cn("mx-auto w-full max-w-7xl pt-10", className)}>
+    <div className={cn("mx-auto w-full max-w-7xl", className)}>
+      <a href="/" className={`text-xl font-bold max-w-7xl`}>
+        StartupCollab
+      </a>
       {children}
     </div>
   );

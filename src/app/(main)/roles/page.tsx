@@ -38,7 +38,7 @@ export default function RoleSelection() {
 
   return (
     <div className="h-[100svh] flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-lg">
         <CardHeader className="space-y-2">
           <CardTitle className="text-2xl font-bold text-center">
             Choose Your Role
@@ -56,7 +56,7 @@ export default function RoleSelection() {
               disabled={isLoading}
             >
               Founder
-              <span className="block text-sm text-muted-foreground mt-2">
+              <span className="block text-sm text-muted-foreground">
                 I have an idea and I'm looking for co-founders
               </span>
             </Button>
@@ -68,7 +68,7 @@ export default function RoleSelection() {
               disabled={isLoading}
             >
               Co-Founder
-              <span className="block text-sm text-muted-foreground mt-2">
+              <span className="block text-sm text-muted-foreground">
                 I want to join exciting projects as a co-founder
               </span>
             </Button>

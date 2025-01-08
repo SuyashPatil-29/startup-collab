@@ -38,12 +38,9 @@ export default async function RootLayout({
           <SidebarProvider defaultOpen={defaultOpen}>
             <AppSidebar />
             <SidebarTrigger />
-            <main className="flex flex-col w-full max-w-screen-xl mx-auto">
-              <a href="/" className="text-xl font-bold py-4" style={{ fontFamily: "cursive" }}>
-                StartupCollab
-              </a>
-              <MaxWidthWrapper>{children}</MaxWidthWrapper>
-            </main>
+            <MaxWidthWrapper>
+              {children}
+            </MaxWidthWrapper>
           </SidebarProvider>
         </AllProviders>
       </body>

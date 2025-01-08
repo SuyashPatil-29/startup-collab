@@ -5,12 +5,8 @@ export async function GET() {
   try {
     const ideas = await prisma.idea.findMany({
       include: {
-        founder: {
-          select: {
-            name: true,
-            image: true
-          }
-        }
+        founder: true,
+        applications : true
       },
       orderBy: {
         createdAt: 'desc'

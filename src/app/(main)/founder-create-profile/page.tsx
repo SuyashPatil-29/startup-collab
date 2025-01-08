@@ -28,7 +28,7 @@ import { useRouter } from "next/navigation";
 import { populateFounderData } from "@/actions/user";
 import { useTransition } from "react";
 
-export const ProfileCreationSchema = z.object({
+const ProfileCreationSchema = z.object({
   // Profile Information
   bio: z.string().min(50, {
     message: "Bio must be at least 50 characters.",
@@ -84,13 +84,17 @@ export default function FounderProfileForm() {
       try {
         const response = await populateFounderData(data);
 
+        if (response.status === "success") {
+          toast.success("Successfully created profile");
+          router.push("/community");
+          return;
+        }
+
         if (response.status === "error") {
           toast.error(response.error.message);
           return;
         }
 
-        toast.success("Successfully created profile");
-        router.push("/");
       } catch (error: any) {
         console.error("Error creating profile:", error);
         toast.error(error.message || "Failed to create profile");

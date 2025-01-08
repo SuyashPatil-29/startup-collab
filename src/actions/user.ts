@@ -68,15 +68,15 @@ export const populateFounderData = async (data: {
           bio: data.bio,
           linkedinProfile: data.linkedinProfile,
           phoneNumber: data.phoneNumber,
-          githubProfile: data.githubUsername,
+          githubUsername: data.githubUsername,
         },
       }),
       prisma.idea.create({
         data: {
           title: data.ideaTitle,
           description: data.ideaDescription,
-          equity: parseFloat(data.equity) || 0,
-          salary: data.salary ? parseFloat(data.salary) : null,
+          equity: data.equity || "0",
+          salary: data.salary ? data.salary : null,
           requirements: data.requirements,
           founderId: session.user.id,
         },

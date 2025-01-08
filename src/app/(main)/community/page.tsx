@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
@@ -8,29 +8,32 @@ import { Badge } from "@/components/ui/badge"
 import { Search } from "lucide-react"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
+import { OpenViewIdeaSheet } from "@/components/OpenViewIdeaSheet"
+import { useSession } from "@/lib/auth-client"
+import { ViewApplicationsSheet } from "@/components/ViewApplicationsSheet"
+import { $Enums, Application, Idea, User } from "@prisma/client"
 
-interface Idea {
-  id: string
-  title: string
-  description: string
-  equity: number
-  salary: number | null
-  requirements: string
-  tags: string[]
-  founder: {
-    name: string
-    image: string | null
-  }
-  createdAt: Date
+export type ApplicationWithDeveloper = Application & {
+  developer: Pick<User, 'id' | 'name' | 'image'>;
+}
+
+export type IdeasWithApplicationAndFounders = Idea & {
+  founder: Pick<User, 'name' | 'id' | 'createdAt' | 'updatedAt' | 'role' | 'email' | 'image' | 'emailVerified'>;
+  applications: ApplicationWithDeveloper[];
 }
 
 export default function CommunityPage() {
+  const {
+    data: session,
+    isPending, //loading state
+    error, //error object
+  } = useSession();
   const [searchQuery, setSearchQuery] = useState("")
 
   const { data: ideas, isLoading } = useQuery({
     queryKey: ['ideas'],
     queryFn: async () => {
-      const { data } = await axios.get<Idea[]>('/api/ideas')
+      const { data } = await axios.get<IdeasWithApplicationAndFounders[]>('/api/ideas')
       return data
     }
   })
@@ -46,7 +49,7 @@ export default function CommunityPage() {
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'INR',
     }).format(amount)
   }
 
@@ -123,13 +126,13 @@ export default function CommunityPage() {
                   </p>
                   {idea.salary && (
                     <p className="text-sm">
-                      <span className="font-semibold">Monthly Salary:</span> {formatCurrency(idea.salary)}
+                      <span className="font-semibold">Monthly Salary:</span> {idea.salary ? formatCurrency(parseInt(idea.salary)) : "Not Mentioned"}
                     </p>
                   )}
                 </div>
               </CardContent>
               <CardFooter>
-                <Button className="w-full">View Details & Apply</Button>
+                {session?.user.id !== idea.founderId ? (<OpenViewIdeaSheet idea={idea} /> ) : <ViewApplicationsSheet idea={idea}/>}
               </CardFooter>
             </Card>
           ))}
@@ -146,3 +149,4 @@ export default function CommunityPage() {
     </div>
   )
 }
+
