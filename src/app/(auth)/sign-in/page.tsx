@@ -35,7 +35,7 @@ export default function SignIn() {
               onClick={async () => {
                 await signIn.social({
                   provider: "google",
-                  callbackURL: "/",
+                  callbackURL: "/community",
                   newUserCallbackURL: "/roles",
                 });
               }}
@@ -59,7 +59,7 @@ export default function SignIn() {
               onClick={() =>
                 signIn.social({
                   provider: "github",
-                  callbackURL: "/",
+                  callbackURL: "/community",
                   newUserCallbackURL: "/roles",
                 })
               }
