@@ -1,5 +1,5 @@
 "use client";
-import { authClient } from "@/lib/auth-client";
+import { useSession, signOut } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
@@ -7,14 +7,14 @@ export default function Home() {
     data: session,
     isPending, //loading state
     error, //error object
-  } = authClient.useSession();
+  } = useSession();
   const router = useRouter();
   return (
     <div>
       <pre>{JSON.stringify(session, null, 2)}</pre>
       <button
         onClick={() =>
-          authClient.signOut({
+          signOut({
             fetchOptions: {
               onSuccess: () => {
                 router.push("/sign-in");
