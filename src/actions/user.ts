@@ -171,3 +171,30 @@ export const applyToApplication = async (data: {
     console.error('Failed to submit application:', error)
   }
 }
+
+export const setApplicationState = async (data : {
+  type : string,
+  id : string
+})=>{
+  if(data.type === "Accept"){
+  const res = await prisma.application.update({
+    where : {
+      id : data.id
+    },
+    data : {
+      status : "ACCEPTED",
+    }
+  })
+  return res
+}else{
+  const res = await prisma.application.update({
+    where : {
+      id : data.id
+    },
+    data : {
+      status : "REJECTED",
+    }
+  })
+  return res
+}
+}

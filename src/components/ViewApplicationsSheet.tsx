@@ -1,4 +1,4 @@
-import { getDeveloperById } from "@/actions/user"
+import { getDeveloperById, setApplicationState } from "@/actions/user"
 import { Button } from "@/components/ui/button"
 import {
   Sheet,
@@ -7,10 +7,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import { prisma } from "@/lib/prisma"
 import { ApplicationStatus, User } from "@prisma/client"
 import { formatDistance } from "date-fns"
-import { Loader2 } from "lucide-react"
 import { useEffect, useState } from "react"
 
 export function ViewApplicationsSheet({ idea }: { idea: any }) {
@@ -104,10 +102,24 @@ export function ViewApplicationsSheet({ idea }: { idea: any }) {
 
                   {application.status === "PENDING" && (
                     <div className="flex gap-2 pt-2">
-                      <Button variant="default" className="w-full" size="sm">
+                      <Button
+                      onClick={async ()=>{
+                        await setApplicationState({
+                            type : "Accept",
+                            id : application.id
+                        })
+                      }} 
+                      variant="default" className="w-full" size="sm">
                         Accept
                       </Button>
-                      <Button variant="outline" className="w-full" size="sm">
+                      <Button 
+                      onClick={async ()=>{
+                        await setApplicationState({
+                            type : "Reject",
+                            id : application.id
+                        })
+                    }}
+                      variant="outline" className="w-full" size="sm">
                         Reject
                       </Button>
                     </div>
