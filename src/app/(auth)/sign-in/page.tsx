@@ -1,6 +1,12 @@
-"use client"
+"use client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { signIn } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 
@@ -8,27 +14,29 @@ export default function SignIn() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader className="space-y-2">
-        <CardTitle className="text-2xl font-bold text-center">Welcome</CardTitle>
+        <CardTitle className="text-2xl font-bold text-center">
+          Welcome
+        </CardTitle>
         <CardDescription className="text-center">
           Sign in with your GitHub account
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="grid gap-4">
-          <div className={cn(
-            "w-full gap-2 flex items-center",
-            "justify-between flex-col"
-          )}>
+          <div
+            className={cn(
+              "w-full gap-2 flex items-center",
+              "justify-between flex-col"
+            )}
+          >
             <Button
               variant="outline"
-              className={cn(
-                "w-full gap-2"
-              )}
+              className={cn("w-full gap-2")}
               onClick={async () => {
                 await signIn.social({
                   provider: "google",
                   callbackURL: "/",
-                  newUserCallbackURL: "/founder-create-profile"
+                  newUserCallbackURL: "/roles",
                 });
               }}
             >
@@ -48,11 +56,13 @@ export default function SignIn() {
             <Button
               variant="outline"
               className="w-full"
-              onClick={() => signIn.social({
-                provider: "github",
-                callbackURL: "/",
-                newUserCallbackURL: "/founder-create-profile"
-              })}
+              onClick={() =>
+                signIn.social({
+                  provider: "github",
+                  callbackURL: "/",
+                  newUserCallbackURL: "/roles",
+                })
+              }
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

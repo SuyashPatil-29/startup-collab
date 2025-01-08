@@ -1,14 +1,30 @@
-"use client"
+"use client";
 import { authClient } from "@/lib/auth-client";
-import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const { 
-    data: session, 
+  const {
+    data: session,
     isPending, //loading state
-    error //error object
-} = authClient.useSession() 
+    error, //error object
+  } = authClient.useSession();
+  const router = useRouter();
   return (
-   <pre>{JSON.stringify(session, null, 2)}</pre>
+    <div>
+      <pre>{JSON.stringify(session, null, 2)}</pre>
+      <button
+        onClick={() =>
+          authClient.signOut({
+            fetchOptions: {
+              onSuccess: () => {
+                router.push("/sign-in");
+              },
+            },
+          })
+        }
+      >
+        Sign Out
+      </button>
+    </div>
   );
 }

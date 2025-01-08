@@ -25,12 +25,10 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
-  // Extended relations
   profile       Profile?
   foundedIdeas  Idea[]        @relation("FounderIdeas")
   applications  Application[] @relation("DeveloperApplications")
-
-  isFounder Boolean @default(false)
+  role          String?
 
   @@unique([email])
   @@map("user")
