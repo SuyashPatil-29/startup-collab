@@ -89,3 +89,35 @@ export const populateFounderData = async (data: {
     return { status: "error", error: error };
   }
 };
+
+export const createNewPost = async (data : {
+  title: string;
+  description: string;
+  equity: string;
+  requirements: string;
+  salary?: string | undefined;
+}) =>{
+  const session = await getSession();
+
+  const user = session?.user;
+
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  try{
+  const post = await prisma.idea.create({
+    data: {
+      title: data.title,
+      description: data.description,
+      equity: data.equity || "0",
+      salary: data.salary ? data.salary : null,
+      requirements: data.requirements,
+      founderId: session.user.id,
+    }})
+    return { status: "success", post };
+  } catch (error) {
+    console.error(error);
+    return { status: "error", error: error };
+  }
+}

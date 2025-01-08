@@ -12,6 +12,7 @@ import { OpenViewIdeaSheet } from "@/components/OpenViewIdeaSheet"
 import { useSession } from "@/lib/auth-client"
 import { ViewApplicationsSheet } from "@/components/ViewApplicationsSheet"
 import { $Enums, Application, Idea, User } from "@prisma/client"
+import { AddNewPostDialog } from "@/components/AddNewPostDialog"
 
 export type ApplicationWithDeveloper = Application & {
   developer: Pick<User, 'id' | 'name' | 'image'>;
@@ -57,7 +58,10 @@ export default function CommunityPage() {
     <div className="container mx-auto py-8">
       {/* Search Section */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-6">Find Your Next Startup Adventure</h1>
+        <div className="flex items-start justify-between">
+          <h1 className="text-2xl font-bold mb-6">Find Your Next Startup Adventure</h1>
+          <AddNewPostDialog />
+        </div>
         <div className="relative">
           <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
           <Input
@@ -104,7 +108,7 @@ export default function CommunityPage() {
                     </div>
                   )}
                   <div>
-                    <CardTitle className="text-xl">{idea.title}</CardTitle>
+                    <CardTitle className="text-lg truncate">{idea.title.slice(0, 30)}...</CardTitle>
                     <p className="text-sm text-gray-500">by {idea.founder.name}</p>
                   </div>
                 </div>
@@ -132,7 +136,7 @@ export default function CommunityPage() {
                 </div>
               </CardContent>
               <CardFooter>
-                {session?.user.id !== idea.founderId ? (<OpenViewIdeaSheet idea={idea} /> ) : <ViewApplicationsSheet idea={idea}/>}
+                {session?.user.id !== idea.founderId ? (<OpenViewIdeaSheet idea={idea} />) : <ViewApplicationsSheet idea={idea} />}
               </CardFooter>
             </Card>
           ))}
