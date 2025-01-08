@@ -1,21 +1,15 @@
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import {
   Sheet,
-  SheetClose,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import { Badge } from "./ui/badge"
-import { IdeasWithApplicationAndFounders } from "@/app/(main)/community/page"
 import { ApplyNowDialog } from "./ApplyNowDialog"
 
-export function OpenViewIdeaSheet({ idea }: { idea: IdeasWithApplicationAndFounders }) {
+export function OpenViewIdeaSheet({ idea }: { idea: any }) {
   // Format currency
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -60,15 +54,6 @@ export function OpenViewIdeaSheet({ idea }: { idea: IdeasWithApplicationAndFound
         </SheetHeader>
 
         <div className="mt-6 space-y-5">
-          {/* Tags */}
-          <div className="flex flex-wrap gap-1.5">
-            {idea.tags.map((tag, index) => (
-              <Badge key={index} variant="secondary" className="text-xs">
-                {tag}
-              </Badge>
-            ))}
-          </div>
-
           {/* Description */}
           <div>
             <h3 className="text-base font-semibold mb-1.5">About the Idea</h3>

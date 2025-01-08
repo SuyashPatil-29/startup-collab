@@ -1,5 +1,4 @@
 import { getDeveloperById } from "@/actions/user"
-import { IdeasWithApplicationAndFounders } from "@/app/(main)/community/page"
 import { Button } from "@/components/ui/button"
 import {
   Sheet,
@@ -14,7 +13,7 @@ import { formatDistance } from "date-fns"
 import { Loader2 } from "lucide-react"
 import { useEffect, useState } from "react"
 
-export function ViewApplicationsSheet({ idea }: { idea: IdeasWithApplicationAndFounders }) {
+export function ViewApplicationsSheet({ idea }: { idea: any }) {
   // Get status color
   const getStatusColor = (status: ApplicationStatus) => {
     switch (status) {
@@ -57,7 +56,7 @@ export function ViewApplicationsSheet({ idea }: { idea: IdeasWithApplicationAndF
           </div>
         ) : (
           <div className="space-y-4">
-            {idea.applications.map(async (application) => {
+            {idea.applications.map(async (application: any) => {
 
               useEffect(() => {
                 getDeveloperById(application.developerId).then(data => {

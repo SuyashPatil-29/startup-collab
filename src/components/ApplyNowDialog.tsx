@@ -25,8 +25,6 @@ import { Loader2 } from "lucide-react"
 import { useState, useTransition } from "react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
-import { IdeasWithApplicationAndFounders } from "@/app/(main)/community/page"
-import axios from "axios"
 import { applyToApplication } from "@/actions/user"
 
 const ApplicationSchema = z.object({
@@ -37,7 +35,7 @@ const ApplicationSchema = z.object({
 
 type ApplicationInput = z.infer<typeof ApplicationSchema>
 
-export function ApplyNowDialog({ idea }: { idea: IdeasWithApplicationAndFounders }) {
+export function ApplyNowDialog({ idea }: { idea: any }) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [isOpen, setIsOpen] = useState(false)
@@ -53,8 +51,8 @@ export function ApplyNowDialog({ idea }: { idea: IdeasWithApplicationAndFounders
     startTransition(async () => {
       try {
         const res = await applyToApplication({
-            proposal : data.proposal,
-            ideaId : idea.id
+          proposal: data.proposal,
+          ideaId: idea.id
         })
         toast.success("Application submitted successfully!")
         setIsOpen(false)
