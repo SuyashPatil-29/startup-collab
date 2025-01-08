@@ -7,7 +7,7 @@ type Props = {
 
 const UserLayout = ({ children }: Props) => {
   return (
-    <MaxWidthWrapper>{children}</MaxWidthWrapper>
+    <div>{children}</div>
   )
 }
 
