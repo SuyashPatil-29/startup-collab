@@ -14,15 +14,6 @@ export const auth = betterAuth({
     github: {
       clientId: process.env.GITHUB_CLIENT_ID!,
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-      mapProfileToUser: (profile) => {
-        return {
-          profile: {
-            bio: profile.bio,
-            id: profile.id,
-            publicRepos: profile.public_repos,
-          },
-        };
-      },
     },
   },
   user: {

@@ -76,7 +76,7 @@ export const populateFounderData = async (data: {
           bio: data.bio,
           linkedinProfile: data.linkedinProfile,
           phoneNumber: data.phoneNumber,
-          githubUsername: data.githubUsername,
+          githubUsername: data.githubUsername ? data.githubUsername : "",
         },
       }),
       prisma.idea.create({
@@ -133,7 +133,7 @@ export const createNewPost = async (data: {
 
 export const applyToApplication = async (data: {
   proposal: string,
-  ideaId: string
+  ideaId: string,
 }) => {
   try {
     const session = await getSession();
@@ -172,29 +172,65 @@ export const applyToApplication = async (data: {
   }
 }
 
-export const setApplicationState = async (data : {
-  type : string,
-  id : string
-})=>{
-  if(data.type === "Accept"){
-  const res = await prisma.application.update({
-    where : {
-      id : data.id
-    },
-    data : {
-      status : "ACCEPTED",
-    }
-  })
-  return res
-}else{
-  const res = await prisma.application.update({
-    where : {
-      id : data.id
-    },
-    data : {
-      status : "REJECTED",
-    }
-  })
-  return res
+export const setApplicationState = async (data: {
+  type: string,
+  id: string
+}) => {
+  if (data.type === "Accept") {
+    const res = await prisma.application.update({
+      where: {
+        id: data.id
+      },
+      data: {
+        status: "ACCEPTED",
+      }
+    })
+    return res
+  } else {
+    const res = await prisma.application.update({
+      where: {
+        id: data.id
+      },
+      data: {
+        status: "REJECTED",
+      }
+    })
+    return res
+  }
 }
-}
+
+export const populateDeveloperData = async (data: {
+  bio: string;
+  linkedinProfile: string;
+  phoneNumber: string;
+  githubUsername: string;
+  skills: string;
+  experience: string;
+}): Promise<SAPayload<Profile>> => {
+  const session = await getSession();
+
+  const user = session?.user;
+
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  try {
+    const profile = await prisma.profile.create({
+      data: {
+        userId: user.id,
+        bio: data.bio,
+        linkedinProfile: data.linkedinProfile,
+        phoneNumber: data.phoneNumber,
+        githubUsername: data.githubUsername,
+        skills: data.skills,
+        experience: data.experience,
+      },
+    });
+
+    return { status: "success", data: profile };
+  } catch (error) {
+    console.error(error);
+    return { status: "error", error: error };
+  }
+};

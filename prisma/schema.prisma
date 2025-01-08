@@ -87,9 +87,10 @@ model Profile {
   bio             String
   linkedinProfile String
   phoneNumber     String
-  githubUsername  String?
-  githubBio       String?
-  user            User     @relation(fields: [userId], references: [id])
+  githubUsername  String
+  skills          String?
+  experience      String?
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId          String   @unique
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt

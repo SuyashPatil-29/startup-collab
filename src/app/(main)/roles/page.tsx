@@ -25,7 +25,7 @@ export default function RoleSelection() {
       if (role === "Founder") {
         router.push("/founder-create-profile");
       } else {
-        router.push("/");
+        router.push("/dev-create-profile");
       }
 
       toast.success(`Successfully registered as a ${role}`);

@@ -1,8 +1,10 @@
+"use client"
 import { Home, Inbox, WalletCards } from "lucide-react"
 
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -11,6 +13,9 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import { Button } from "./ui/button"
+import { authClient } from "@/lib/auth-client"
+import { useRouter } from "next/navigation"
 
 // Menu items.
 const items = [
@@ -32,6 +37,7 @@ const items = [
 ]
 
 export function AppSidebar() {
+  const router = useRouter()
   return (
     <Sidebar collapsible="icon" variant="floating">
       <SidebarContent>
@@ -52,8 +58,23 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        <SidebarFooter>
+          <Button
+            onClick={async () => {
+              await authClient.signOut({
+                fetchOptions: {
+                  onSuccess: () => {
+                    router.push("/sign-in"); // redirect to login page
+                  },
+                },
+              });
+            }}
+          >
+            Sign out
+          </Button>
+        </SidebarFooter>
       </SidebarContent>
       <SidebarRail />
-    </Sidebar>
+    </Sidebar >
   )
 }
