@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import AllProviders from "@/components/AllProviders";
 
 const geistSans = Geist({
@@ -30,7 +29,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AllProviders>
-          <MaxWidthWrapper>{children}</MaxWidthWrapper>
+          {children}
         </AllProviders>
       </body>
     </html>
