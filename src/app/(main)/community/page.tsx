@@ -18,7 +18,6 @@ import { useSession } from "@/lib/auth-client";
 import { ViewApplicationsSheet } from "@/components/ViewApplicationsSheet";
 import { AddNewPostDialog } from "@/components/AddNewPostDialog";
 import { getIdeas } from "@/actions/applications";
-
 export default function CommunityPage() {
   const { data: session } = useSession();
   const [searchQuery, setSearchQuery] = useState("");

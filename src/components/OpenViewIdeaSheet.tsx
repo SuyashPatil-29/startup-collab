@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sheet"
 import { Badge } from "./ui/badge"
 import { IdeasWithApplicationAndFounders } from "@/app/(main)/community/page"
+import { ApplyNowDialog } from "./ApplyNowDialog"
 
 export function OpenViewIdeaSheet({ idea }: { idea: IdeasWithApplicationAndFounders }) {
   // Format currency
@@ -109,9 +110,7 @@ export function OpenViewIdeaSheet({ idea }: { idea: IdeasWithApplicationAndFound
         </div>
 
         <SheetFooter className="mt-6">
-          <Button className="w-full" size="lg">
-            Apply Now
-          </Button>
+          <ApplyNowDialog idea={idea}/>
         </SheetFooter>
       </SheetContent>
     </Sheet>
