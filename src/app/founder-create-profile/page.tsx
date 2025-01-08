@@ -17,7 +17,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { toast } from "sonner"
 import { authClient } from "@/lib/auth-client"
 import { useRouter } from "next/navigation"
-import { Card } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Briefcase, Rocket, Tags, User } from "lucide-react"
 
 const FormSchema = z.object({
   // Profile Information
@@ -91,118 +92,176 @@ export default function FounderProfileForm() {
   }
 
   return (
-    <Card>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-8">
-          <div className="space-y-4">
-            <h2 className="text-2xl font-bold">Welcome to Startup Collab! Founder</h2>
-            <h3 className="text-xl font-bold">Let's get started by creating your profile.</h3>
+    <Card className="w-full max-w-4xl mx-auto">
+      <CardHeader>
+        <CardTitle className="text-3xl font-bold text-center">Welcome to Startup Collab!</CardTitle>
+        <CardDescription className="text-xl text-center">Let's create your founder profile and post your startup idea.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <div className="space-y-6">
+              <div className="flex items-center space-x-2 text-2xl font-semibold">
+                <User className="w-6 h-6" />
+                <h2>Personal Information</h2>
+              </div>
 
-            <FormField
-              control={form.control}
-              name="bio"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Bio</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Tell us about yourself, your background, and your entrepreneurial journey..."
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Share your experience and what makes you a great founder.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="linkedinProfile"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>LinkedIn Profile</FormLabel>
-                  <FormControl>
-                    <Input placeholder="https://linkedin.com/in/yourprofile" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="phoneNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
-                  <FormControl>
-                    <Input placeholder="+91" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    Will only be shared with accepted co-founders.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div className="space-y-4">
-            <h2 className="text-2xl font-bold">Startup Idea</h2>
-
-            <FormField
-              control={form.control}
-              name="ideaTitle"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Idea Title</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Give your startup idea a catchy title" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="ideaDescription"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Idea Description</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Describe your startup idea in detail..."
-                      className="h-32"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Include the problem you're solving, target market, and potential revenue streams.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="flex gap-4">
               <FormField
                 control={form.control}
-                name="equity"
+                name="bio"
                 render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel>Equity Offered (%)</FormLabel>
+                  <FormItem>
+                    <FormLabel>Bio</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        min="1"
-                        max="100"
-                        placeholder="20"
+                      <Textarea
+                        placeholder="Tell us about yourself, your background, and your entrepreneurial journey..."
+                        className="min-h-[100px]"
                         {...field}
-                        onChange={e => field.onChange(parseFloat(e.target.value))}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Share your experience and what makes you a great founder.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="linkedinProfile"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>LinkedIn Profile</FormLabel>
+                      <FormControl>
+                        <Input placeholder="https://linkedin.com/in/yourprofile" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="phoneNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone Number</FormLabel>
+                      <FormControl>
+                        <Input placeholder="+91" {...field} />
+                      </FormControl>
+                      <FormDescription>
+                        Will only be shared with accepted co-founders.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <div className="flex items-center space-x-2 text-2xl font-semibold">
+                <Rocket className="w-6 h-6" />
+                <h2>Startup Idea</h2>
+              </div>
+
+              <FormField
+                control={form.control}
+                name="ideaTitle"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Idea Title</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Give your startup idea a catchy title" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="ideaDescription"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Idea Description</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Describe your startup idea in detail..."
+                        className="min-h-[150px]"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Include the problem you're solving, target market, and potential revenue streams.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="equity"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Equity Offered (%)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          min="1"
+                          max="100"
+                          placeholder="20"
+                          {...field}
+                          onChange={e => field.onChange(parseFloat(e.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="salary"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Monthly Salary (Optional)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="5000"
+                          {...field}
+                          onChange={e => field.onChange(parseFloat(e.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <div className="flex items-center space-x-2 text-2xl font-semibold">
+                <Briefcase className="w-6 h-6" />
+                <h2>Co-founder Requirements</h2>
+              </div>
+
+              <FormField
+                control={form.control}
+                name="requirements"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Co-founder Requirements</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Describe the skills, experience, and commitment you're looking for in a co-founder..."
+                        className="min-h-[100px]"
+                        {...field}
                       />
                     </FormControl>
                     <FormMessage />
@@ -212,65 +271,35 @@ export default function FounderProfileForm() {
 
               <FormField
                 control={form.control}
-                name="salary"
+                name="tags"
                 render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel>Monthly Salary (Optional)</FormLabel>
+                  <FormItem>
+                    <FormLabel>Required Technologies/Skills</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="5000"
-                        {...field}
-                        onChange={e => field.onChange(parseFloat(e.target.value))}
-                      />
+                      <div className="flex items-center space-x-2">
+                        <Tags className="w-5 h-5 text-gray-400" />
+                        <Input
+                          placeholder="React, Node.js, AWS, Marketing (comma-separated)"
+                          {...field}
+                        />
+                      </div>
                     </FormControl>
+                    <FormDescription>
+                      Enter technologies and skills required, separated by commas.
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-
-            <FormField
-              control={form.control}
-              name="requirements"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Co-founder Requirements</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Describe the skills, experience, and commitment you're looking for in a co-founder..."
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="tags"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Required Technologies/Skills</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="React, Node.js, AWS, Marketing (comma-separated)"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Enter technologies and skills required, separated by commas.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <Button type="submit" className="w-full">Create Profile & Post Idea</Button>
-        </form>
-      </Form >
+          </form>
+        </Form>
+      </CardContent>
+      <CardFooter>
+        <Button type="submit" className="w-full" size="lg" onClick={form.handleSubmit(onSubmit)}>
+          Create Profile & Post Idea
+        </Button>
+      </CardFooter>
     </Card>
   )
 }
