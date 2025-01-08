@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { SAPayload } from "@/lib/types";
-import { User } from "better-auth";
+import { User, Profile, Idea } from "@prisma/client";
 
 const getSession = async () => {
   return await auth.api.getSession({
@@ -39,7 +39,7 @@ export const assignUserRole = async (
   }
 };
 
-export const populateFounderData = async (data : {
+export const populateFounderData = async (data: {
   bio: string;
   linkedinProfile: string;
   phoneNumber: string;
@@ -51,7 +51,7 @@ export const populateFounderData = async (data : {
   githubRepos?: string[] | undefined;
   githubBio?: string | undefined;
   salary?: string | undefined;
-}) =>{
+}): Promise<SAPayload<{ profile: Profile; idea: Idea }>> => {
   const session = await getSession();
 
   const user = session?.user;
@@ -62,15 +62,13 @@ export const populateFounderData = async (data : {
 
   try {
     const [profile, idea] = await Promise.all([
-      prisma.profile.update({
-        where: {
-          userId: session.user.id,
-        },
+      prisma.profile.create({
         data: {
+          userId: user.id,
           bio: data.bio,
           linkedinProfile: data.linkedinProfile,
           phoneNumber: data.phoneNumber,
-          githubProfile: data.githubUsername || null,
+          githubProfile: data.githubUsername,
         },
       }),
       prisma.idea.create({
@@ -82,11 +80,12 @@ export const populateFounderData = async (data : {
           requirements: data.requirements,
           founderId: session.user.id,
         },
-      })
+      }),
     ]);
 
-    return { profile, idea }
-  } catch (error : any) {
-    console.log(error)
+    return { status: "success", data: { profile, idea } };
+  } catch (error) {
+    console.error(error);
+    return { status: "error", error: error };
   }
-}
+};

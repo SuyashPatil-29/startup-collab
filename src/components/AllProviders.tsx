@@ -1,6 +1,7 @@
-'use client';
-import React, { FC, useState } from 'react';
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+"use client";
+import React, { FC, useState } from "react";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { Toaster } from "sonner";
 
 interface ProviderProps {
   children: React.ReactNode;
@@ -9,7 +10,10 @@ interface ProviderProps {
 const AllProviders: FC<ProviderProps> = ({ children }) => {
   const [queryClient] = useState(() => new QueryClient());
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      {children}
+      <Toaster richColors />
+    </QueryClientProvider>
   );
 };
 

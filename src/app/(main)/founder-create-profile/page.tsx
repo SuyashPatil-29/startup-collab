@@ -23,11 +23,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Briefcase, Rocket, Tags, User } from "lucide-react";
+import { Briefcase, Loader2, Rocket, Tags, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { populateFounderData } from "@/actions/user";
+import { useTransition } from "react";
 
-const FormSchema = z.object({
+export const ProfileCreationSchema = z.object({
   // Profile Information
   bio: z.string().min(50, {
     message: "Bio must be at least 50 characters.",
@@ -58,9 +59,9 @@ const FormSchema = z.object({
 });
 
 export default function FounderProfileForm() {
-  const router = useRouter()
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const router = useRouter();
+  const form = useForm<z.infer<typeof ProfileCreationSchema>>({
+    resolver: zodResolver(ProfileCreationSchema),
     defaultValues: {
       bio: "",
       linkedinProfile: "",
@@ -76,15 +77,25 @@ export default function FounderProfileForm() {
     },
   });
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
-    try {
-      const response = await populateFounderData(data)
-      
-      console.log(response)
-    } catch (error : any) {
-      console.error('Error creating profile:', error)
-      toast.error(error.response?.data?.error || "Failed to create profile")
-    }
+  const [isSubmitting, startSubMitting] = useTransition();
+
+  function onSubmit(data: z.infer<typeof ProfileCreationSchema>) {
+    startSubMitting(async () => {
+      try {
+        const response = await populateFounderData(data);
+
+        if (response.status === "error") {
+          toast.error(response.error.message);
+          return;
+        }
+
+        toast.success("Successfully created profile");
+        router.push("/");
+      } catch (error: any) {
+        console.error("Error creating profile:", error);
+        toast.error(error.message || "Failed to create profile");
+      }
+    });
   }
 
   return (
@@ -221,7 +232,7 @@ export default function FounderProfileForm() {
                           placeholder="20"
                           {...field}
                           onChange={(e) =>
-                            field.onChange((e.target.value).toString())
+                            field.onChange(e.target.value.toString())
                           }
                         />
                       </FormControl>
@@ -241,7 +252,7 @@ export default function FounderProfileForm() {
                           placeholder="50000"
                           {...field}
                           onChange={(e) =>
-                            field.onChange((e.target.value).toString())
+                            field.onChange(e.target.value.toString())
                           }
                         />
                       </FormControl>
@@ -280,15 +291,23 @@ export default function FounderProfileForm() {
         </Form>
       </CardContent>
       <CardFooter>
-  <Button
-    type="submit"
-    className="w-full"
-    size="lg"
-    onClick={form.handleSubmit(onSubmit)}
-  >
-    Create Profile & Post Idea
-  </Button>
-</CardFooter>
+        <Button
+          type="submit"
+          className="w-full"
+          size="lg"
+          onClick={form.handleSubmit(onSubmit)}
+          disabled={form.formState.isSubmitting}
+        >
+          {isSubmitting ? (
+            <>
+              <span className="mr-2">Creating...</span>
+              <Loader2 className="h-4 w-4 animate-spin" />
+            </>
+          ) : (
+            "Create Profile & Post Idea"
+          )}
+        </Button>
+      </CardFooter>
     </Card>
   );
 }
