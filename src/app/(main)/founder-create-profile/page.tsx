@@ -94,7 +94,6 @@ export default function FounderProfileForm() {
           toast.error(response.error.message);
           return;
         }
-
       } catch (error: any) {
         console.error("Error creating profile:", error);
         toast.error(error.message || "Failed to create profile");

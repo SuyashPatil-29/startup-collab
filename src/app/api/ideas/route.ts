@@ -1,24 +1,28 @@
-import { prisma } from "@/lib/prisma"
-import { NextResponse } from "next/server"
+import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
     const ideas = await prisma.idea.findMany({
       include: {
         founder: true,
-        applications : true
+        applications: {
+          include: {
+            developer: true,
+          },
+        },
       },
       orderBy: {
-        createdAt: 'desc'
-      }
-    })
+        createdAt: "desc",
+      },
+    });
 
-    return NextResponse.json(ideas)
+    return NextResponse.json(ideas);
   } catch (error) {
-    console.error('Failed to fetch ideas:', error)
+    console.error("Failed to fetch ideas:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch ideas' },
+      { error: "Failed to fetch ideas" },
       { status: 500 }
-    )
+    );
   }
 }

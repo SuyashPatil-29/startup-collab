@@ -1,65 +1,62 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Search } from "lucide-react"
-import { useQuery } from "@tanstack/react-query"
-import axios from "axios"
-import { OpenViewIdeaSheet } from "@/components/OpenViewIdeaSheet"
-import { useSession } from "@/lib/auth-client"
-import { ViewApplicationsSheet } from "@/components/ViewApplicationsSheet"
-import { $Enums, Application, Idea, User } from "@prisma/client"
-import { AddNewPostDialog } from "@/components/AddNewPostDialog"
-
-export type ApplicationWithDeveloper = Application & {
-  developer: Pick<User, 'id' | 'name' | 'image'>;
-}
-
-export type IdeasWithApplicationAndFounders = Idea & {
-  founder: Pick<User, 'name' | 'id' | 'createdAt' | 'updatedAt' | 'role' | 'email' | 'image' | 'emailVerified'>;
-  applications: ApplicationWithDeveloper[];
-}
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Search } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { OpenViewIdeaSheet } from "@/components/OpenViewIdeaSheet";
+import { useSession } from "@/lib/auth-client";
+import { ViewApplicationsSheet } from "@/components/ViewApplicationsSheet";
+import { AddNewPostDialog } from "@/components/AddNewPostDialog";
+import { getIdeas } from "@/actions/applications";
 
 export default function CommunityPage() {
-  const {
-    data: session,
-    isPending, //loading state
-    error, //error object
-  } = useSession();
-  const [searchQuery, setSearchQuery] = useState("")
+  const { data: session } = useSession();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const { data: ideas, isLoading } = useQuery({
-    queryKey: ['ideas'],
+    queryKey: ["ideas"],
     queryFn: async () => {
-      const { data } = await axios.get<IdeasWithApplicationAndFounders[]>('/api/ideas')
-      return data
-    }
-  })
+      const data = await getIdeas();
+      return data;
+    },
+  });
 
   // Filter ideas based on search query
-  const filteredIdeas = ideas?.filter(idea =>
-    idea.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    idea.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    idea.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-  )
+  const filteredIdeas = ideas?.filter(
+    (idea) =>
+      idea.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      idea.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      idea.tags.some((tag) =>
+        tag.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+  );
 
   // Format currency
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'INR',
-    }).format(amount)
-  }
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "INR",
+    }).format(amount);
+  };
 
   return (
     <div className="container mx-auto py-8">
       {/* Search Section */}
       <div className="mb-8">
         <div className="flex items-start justify-between">
-          <h1 className="text-2xl font-bold mb-6">Find Your Next Startup Adventure</h1>
+          <h1 className="text-2xl font-bold mb-6">
+            Find Your Next Startup Adventure
+          </h1>
           <AddNewPostDialog />
         </div>
         <div className="relative">
@@ -108,8 +105,12 @@ export default function CommunityPage() {
                     </div>
                   )}
                   <div>
-                    <CardTitle className="text-lg truncate">{idea.title.slice(0, 30)}...</CardTitle>
-                    <p className="text-sm text-gray-500">by {idea.founder.name}</p>
+                    <CardTitle className="text-lg truncate">
+                      {idea.title.slice(0, 30)}...
+                    </CardTitle>
+                    <p className="text-sm text-gray-500">
+                      by {idea.founder.name}
+                    </p>
                   </div>
                 </div>
                 <CardDescription className="line-clamp-3">
@@ -126,17 +127,25 @@ export default function CommunityPage() {
                 </div>
                 <div className="space-y-2">
                   <p className="text-sm">
-                    <span className="font-semibold">Equity Offered:</span> {idea.equity}%
+                    <span className="font-semibold">Equity Offered:</span>{" "}
+                    {idea.equity}%
                   </p>
                   {idea.salary && (
                     <p className="text-sm">
-                      <span className="font-semibold">Monthly Salary:</span> {idea.salary ? formatCurrency(parseInt(idea.salary)) : "Not Mentioned"}
+                      <span className="font-semibold">Monthly Salary:</span>{" "}
+                      {idea.salary
+                        ? formatCurrency(parseInt(idea.salary))
+                        : "Not Mentioned"}
                     </p>
                   )}
                 </div>
               </CardContent>
               <CardFooter>
-                {session?.user.id !== idea.founderId ? (<OpenViewIdeaSheet idea={idea} />) : <ViewApplicationsSheet idea={idea} />}
+                {session?.user.id !== idea.founderId ? (
+                  <OpenViewIdeaSheet idea={idea} />
+                ) : (
+                  <ViewApplicationsSheet idea={idea} />
+                )}
               </CardFooter>
             </Card>
           ))}
@@ -151,6 +160,5 @@ export default function CommunityPage() {
         </div>
       )}
     </div>
-  )
+  );
 }
-

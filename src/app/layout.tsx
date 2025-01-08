@@ -27,8 +27,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies()
-  const defaultOpen = cookieStore.get("sidebar:state")?.value === "true"
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
   return (
     <html lang="en">
       <body
@@ -38,9 +38,7 @@ export default async function RootLayout({
           <SidebarProvider defaultOpen={defaultOpen}>
             <AppSidebar />
             <SidebarTrigger />
-            <MaxWidthWrapper>
-              {children}
-            </MaxWidthWrapper>
+            <MaxWidthWrapper>{children}</MaxWidthWrapper>
           </SidebarProvider>
         </AllProviders>
       </body>
