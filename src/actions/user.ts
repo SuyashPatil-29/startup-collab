@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { SAPayload } from "@/lib/types";
-import { User } from "@prisma/client";
+import { User } from "better-auth";
 
 const getSession = async () => {
   return await auth.api.getSession({
@@ -38,3 +38,55 @@ export const assignUserRole = async (
     return { status: "error", error: error };
   }
 };
+
+export const populateFounderData = async (data : {
+  bio: string;
+  linkedinProfile: string;
+  phoneNumber: string;
+  ideaTitle: string;
+  ideaDescription: string;
+  equity: string;
+  requirements: string;
+  githubUsername?: string | undefined;
+  githubRepos?: string[] | undefined;
+  githubBio?: string | undefined;
+  salary?: string | undefined;
+}) =>{
+  const session = await getSession();
+
+  const user = session?.user;
+
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  try {
+    const [profile, idea] = await Promise.all([
+      prisma.profile.update({
+        where: {
+          userId: session.user.id,
+        },
+        data: {
+          bio: data.bio,
+          linkedinProfile: data.linkedinProfile,
+          phoneNumber: data.phoneNumber,
+          githubProfile: data.githubUsername || null,
+        },
+      }),
+      prisma.idea.create({
+        data: {
+          title: data.ideaTitle,
+          description: data.ideaDescription,
+          equity: parseFloat(data.equity) || 0,
+          salary: data.salary ? parseFloat(data.salary) : null,
+          requirements: data.requirements,
+          founderId: session.user.id,
+        },
+      })
+    ]);
+
+    return { profile, idea }
+  } catch (error : any) {
+    console.log(error)
+  }
+}

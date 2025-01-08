@@ -15,8 +15,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -26,6 +24,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Briefcase, Rocket, Tags, User } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { populateFounderData } from "@/actions/user";
 
 const FormSchema = z.object({
   // Profile Information
@@ -50,18 +50,15 @@ const FormSchema = z.object({
     message:
       "Please provide a detailed description of at least 200 characters.",
   }),
-  equity: z.number().min(1).max(100).default(0),
-  salary: z.number().optional(),
+  equity: z.string().default("0"),
+  salary: z.string().optional(),
   requirements: z.string().min(50, {
     message: "Please specify detailed requirements for potential co-founders.",
   }),
-  tags: z.string().transform((str) => str.split(",").map((tag) => tag.trim())),
 });
 
 export default function FounderProfileForm() {
-  const { data: session } = authClient.useSession();
-  const router = useRouter();
-
+  const router = useRouter()
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -73,29 +70,20 @@ export default function FounderProfileForm() {
       githubBio: "",
       ideaTitle: "",
       ideaDescription: "",
-      equity: 0,
+      equity: "0",
+      salary: "",
       requirements: "",
-      tags: [],
     },
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      const response = await fetch("/api/create-founder-profile", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to create profile");
-      }
-
-      toast("Profile created successfully!");
-    } catch (error) {
-      toast.error("Failed to create profile");
+      const response = await populateFounderData(data)
+      
+      console.log(response)
+    } catch (error : any) {
+      console.error('Error creating profile:', error)
+      toast.error(error.response?.data?.error || "Failed to create profile")
     }
   }
 
@@ -230,13 +218,10 @@ export default function FounderProfileForm() {
                       <FormLabel>Equity Offered (%)</FormLabel>
                       <FormControl>
                         <Input
-                          type="number"
-                          min="1"
-                          max="100"
                           placeholder="20"
                           {...field}
                           onChange={(e) =>
-                            field.onChange(parseFloat(e.target.value))
+                            field.onChange((e.target.value).toString())
                           }
                         />
                       </FormControl>
@@ -253,11 +238,10 @@ export default function FounderProfileForm() {
                       <FormLabel>Monthly Salary (Optional)</FormLabel>
                       <FormControl>
                         <Input
-                          type="number"
-                          placeholder="5000"
+                          placeholder="50000"
                           {...field}
                           onChange={(e) =>
-                            field.onChange(parseFloat(e.target.value))
+                            field.onChange((e.target.value).toString())
                           }
                         />
                       </FormControl>
@@ -291,44 +275,20 @@ export default function FounderProfileForm() {
                   </FormItem>
                 )}
               />
-
-              <FormField
-                control={form.control}
-                name="tags"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Required Technologies/Skills</FormLabel>
-                    <FormControl>
-                      <div className="flex items-center space-x-2">
-                        <Tags className="w-5 h-5 text-gray-400" />
-                        <Input
-                          placeholder="React, Node.js, AWS, Marketing (comma-separated)"
-                          {...field}
-                        />
-                      </div>
-                    </FormControl>
-                    <FormDescription>
-                      Enter technologies and skills required, separated by
-                      commas.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
             </div>
           </form>
         </Form>
       </CardContent>
       <CardFooter>
-        <Button
-          type="submit"
-          className="w-full"
-          size="lg"
-          onClick={form.handleSubmit(onSubmit)}
-        >
-          Create Profile & Post Idea
-        </Button>
-      </CardFooter>
+  <Button
+    type="submit"
+    className="w-full"
+    size="lg"
+    onClick={form.handleSubmit(onSubmit)}
+  >
+    Create Profile & Post Idea
+  </Button>
+</CardFooter>
     </Card>
   );
 }
