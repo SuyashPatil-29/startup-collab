@@ -18,7 +18,7 @@ export default function SignIn() {
           Welcome
         </CardTitle>
         <CardDescription className="text-center">
-          Sign in with your GitHub account
+          Sign in with your Social accounts
         </CardDescription>
       </CardHeader>
       <CardContent>
