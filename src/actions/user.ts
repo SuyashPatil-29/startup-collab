@@ -16,8 +16,8 @@ export const getDeveloperById = async (id: string) => {
     where: {
       id,
     },
-  })
-}
+  });
+};
 
 export const assignUserRole = async (
   role: "Co-Founder" | "Founder"
@@ -122,18 +122,18 @@ export const createNewPost = async (data: {
         salary: data.salary ? data.salary : null,
         requirements: data.requirements,
         founderId: session.user.id,
-      }
-    })
+      },
+    });
     return { status: "success", post };
   } catch (error) {
     console.error(error);
     return { status: "error", error: error };
   }
-}
+};
 
 export const applyToApplication = async (data: {
-  proposal: string,
-  ideaId: string,
+  proposal: string;
+  ideaId: string;
 }) => {
   try {
     const session = await getSession();
@@ -150,10 +150,10 @@ export const applyToApplication = async (data: {
         ideaId: data.ideaId,
         developerId: session.user.id,
       },
-    })
+    });
 
     if (existingApplication) {
-      return { status: "Applied", existingApplication }
+      return { status: "Applied", existingApplication };
     }
 
     // Create new application
@@ -164,40 +164,40 @@ export const applyToApplication = async (data: {
         proposal: data.proposal,
         status: "PENDING",
       },
-    })
+    });
 
-    return { status: "Success", application }
+    return { status: "Success", application };
   } catch (error) {
-    console.error('Failed to submit application:', error)
+    console.error("Failed to submit application:", error);
   }
-}
+};
 
 export const setApplicationState = async (data: {
-  type: string,
-  id: string
+  type: string;
+  id: string;
 }) => {
   if (data.type === "Accept") {
     const res = await prisma.application.update({
       where: {
-        id: data.id
+        id: data.id,
       },
       data: {
         status: "ACCEPTED",
-      }
-    })
-    return res
+      },
+    });
+    return res;
   } else {
     const res = await prisma.application.update({
       where: {
-        id: data.id
+        id: data.id,
       },
       data: {
         status: "REJECTED",
-      }
-    })
-    return res
+      },
+    });
+    return res;
   }
-}
+};
 
 export const populateDeveloperData = async (data: {
   bio: string;
@@ -229,6 +229,16 @@ export const populateDeveloperData = async (data: {
     });
 
     return { status: "success", data: profile };
+  } catch (error) {
+    console.error(error);
+    return { status: "error", error: error };
+  }
+};
+
+export const fetchAllUsers = async () => {
+  try {
+    const users = await prisma.user.findMany();
+    return { status: "success", data: users };
   } catch (error) {
     console.error(error);
     return { status: "error", error: error };
